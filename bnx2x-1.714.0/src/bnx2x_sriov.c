@@ -1137,17 +1137,17 @@ static int bnx2x_vf_devfn(struct bnx2x *bp, int vfid)
 #if LINUX_STARTING_AT_VERSION(2, 6, 32) /* BNX2X_UPSTREAM */
 static void bnx2x_vf_set_bars(struct bnx2x *bp, struct bnx2x_virtf *vf)
 {
-	int i, n;
+	int i;
 	struct pci_dev *dev = bp->pdev;
 	struct bnx2x_sriov *iov = &bp->vfdb->sriov;
 
-	for (i = 0, n = 0; i < PCI_SRIOV_NUM_BARS; i += 2, n++) {
-		u64 start = pci_resource_start(dev, PCI_IOV_RESOURCES + i);
-		u32 size = pci_resource_len(dev, PCI_IOV_RESOURCES + i);
+	for (i = 0; i < PCI_SRIOV_NUM_BARS; i++) {
+		u64 start = pci_resource_start(dev, PCI_IOV_RESOURCES + (i<<1));
+		u32 size = pci_resource_len(dev, PCI_IOV_RESOURCES + (i<<1));
 
 		size /= iov->total;
-		vf->bars[n].bar = start + size * vf->abs_vfid;
-		vf->bars[n].size = size;
+		vf->bars[i].bar = start + size * vf->abs_vfid;
+		vf->bars[i].size = size;
 	}
 }
 #endif
